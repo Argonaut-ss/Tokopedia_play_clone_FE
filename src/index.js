@@ -9,7 +9,10 @@ const theme = extendTheme({
   colors: {
     tokopedia: {
       red: "#f94d64",
-      green: "#07aa5b",
+      green: {
+        primary: "#07aa5b",
+        second: "#2b3a31",
+      },
     },
   },
 });

@@ -63,7 +63,6 @@ function CardVideo(props) {
       color="white"
       borderRadius={8}
       margin={5}
-      onClick={props.onClick}
     >
       <Flex h="100%" justifyContent="space-between" flexDirection="column">
         <Box w="100%" h="25px">

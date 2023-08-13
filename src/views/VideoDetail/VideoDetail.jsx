@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Text, FormControl } from "@chakra-ui/react";
 import CardProduct from "../../components/CardProduct/CardProduct";
 import ReactPlayer from "react-player";
 import CardVideo from "../../components/CarVideo/CardVideo";
@@ -11,8 +11,43 @@ function VideoDetail() {
   const { state } = useLocation();
   const { videoId, videoUrl } = state;
 
+  const [comments, setComments] = useState([]);
+  const [username, setUsername] = useState("");
+  const [commentMessage, setCommentMessage] = useState("");
   const [products, setProducts] = useState([]);
   const [videos, setVideos] = useState([]);
+
+  const handleInputUsername = (e) => {
+    setUsername(e.target.value);
+  };
+  const handleInputComment = (e) => {
+    setCommentMessage(e.target.value);
+  };
+
+  const postComment = async (e) => {
+    try {
+      e.preventDefault();
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/comments/${videoId}`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            username: username,
+            comment_message: commentMessage,
+          }),
+          headers: {
+            "Content-type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      comments.push(data.data);
+      setCommentMessage("");
+      setUsername("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const fetchVideos = async () => {
     try {
@@ -38,9 +73,22 @@ function VideoDetail() {
     }
   };
 
+  const fetchComments = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/comments/${videoId}`
+      );
+      const data = await response.json();
+      setComments(data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchProducts();
     fetchVideos();
+    fetchComments();
   }, [videoId, videoUrl]);
 
   return (
@@ -126,56 +174,52 @@ function VideoDetail() {
             },
           }}
         >
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
-          <CommentMessage />
+          <Flex flexDirection="column">
+            {comments.map((comment, key) => (
+              <CommentMessage
+                key={key}
+                username={comment.username}
+                commentMessage={comment.commentMessage}
+              />
+            ))}
+          </Flex>
         </Box>
         <Box h="20%" w="100%" padding={3}>
-          <Input
-            variant="outline"
-            placeholder="Username"
-            color="white"
-            marginBottom={2}
-            marginTop={3}
-            size="sm"
-            borderRadius={5}
-          />
-          <Input
-            variant="outline"
-            placeholder="Say something"
-            color="white"
-            size="md"
-          />
-          <Button
-            size="sm"
-            marginTop={3}
-            color="white"
-            bg="tokopedia.green.primary"
-            w="100%"
-          >
-            Kirim
-          </Button>
+          <form onSubmit={postComment}>
+            <FormControl isRequired>
+              <Input
+                variant="outline"
+                placeholder="Username"
+                color="white"
+                marginBottom={2}
+                marginTop={3}
+                size="sm"
+                borderRadius={5}
+                type="text"
+                value={username}
+                onChange={handleInputUsername}
+              />
+              <Input
+                variant="outline"
+                placeholder="Say something"
+                color="white"
+                size="md"
+                type="text"
+                value={commentMessage}
+                onChange={handleInputComment}
+              />
+              <Button
+                size="sm"
+                marginTop={3}
+                color="white"
+                bg="tokopedia.green.primary"
+                w="100%"
+                type="submit"
+              >
+                Kirim
+              </Button>
+            </FormControl>
+          </form>
         </Box>
       </Box>
     </Flex>

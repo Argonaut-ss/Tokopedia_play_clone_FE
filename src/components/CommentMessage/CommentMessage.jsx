@@ -1,7 +1,7 @@
 import { Box, Text } from "@chakra-ui/react";
 import React from "react";
 
-function CommentMessage() {
+function CommentMessage(props) {
   return (
     <Box display="inline-block" marginBottom={3}>
       <Text color="white" fontWeight="600" fontSize={12} display="inline-block">
@@ -14,10 +14,9 @@ function CommentMessage() {
             marginRight: "12px",
           }}
         >
-          Sam Syft
+          {props.username}
         </span>
-        people its not nice to say someone has no friends, no one is spamming
-        anymore and sorry was said
+        {props.commentMessage}
       </Text>
     </Box>
   );

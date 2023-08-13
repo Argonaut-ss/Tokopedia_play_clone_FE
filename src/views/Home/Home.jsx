@@ -3,15 +3,22 @@ import { Box } from "@chakra-ui/react";
 import CardVideo from "../../components/CarVideo/CardVideo";
 import CategoryList from "../../components/CategoryList/CategoryList";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
   const [videos, setVideos] = useState([]);
 
   const fetchVideos = async () => {
-    console.log(process.env.REACT_APP_SERVER_URL);
-    const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/videos`);
-    const data = await response.json();
-    setVideos(data.data);
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/videos`
+      );
+      const data = await response.json();
+      setVideos(data.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -33,6 +40,14 @@ function Home() {
             store={video.storeName}
             views={video.totalView}
             image={video.thumbnailUrl}
+            onClick={() =>
+              navigate("/detail", {
+                state: {
+                  videoId: video.id,
+                  videoUrl: video.videoUrl,
+                },
+              })
+            }
           />
         ))}
       </Box>

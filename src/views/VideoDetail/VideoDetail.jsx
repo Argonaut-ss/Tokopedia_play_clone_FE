@@ -1,11 +1,48 @@
 import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
-import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import CardProduct from "../../components/CardProduct/CardProduct";
 import ReactPlayer from "react-player";
 import CardVideo from "../../components/CarVideo/CardVideo";
 import CommentMessage from "../../components/CommentMessage/CommentMessage";
 
 function VideoDetail() {
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const { videoId, videoUrl } = state;
+
+  const [products, setProducts] = useState([]);
+  const [videos, setVideos] = useState([]);
+
+  const fetchVideos = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/videos`
+      );
+      const data = await response.json();
+      setVideos(data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/products/${videoId}`
+      );
+      const data = await response.json();
+      setProducts(data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+    fetchVideos();
+  }, [videoId, videoUrl]);
+
   return (
     <Flex justifyContent="space-between">
       <Box h="100vh" w="400px">
@@ -21,10 +58,14 @@ function VideoDetail() {
             },
           }}
         >
-          <CardProduct />
-          <CardProduct />
-          <CardProduct />
-          <CardProduct />
+          {products.map((product) => (
+            <CardProduct
+              title={product.title}
+              priceFormat={product.price_format}
+              imageUrl={product.imageUrl}
+              productUrl={product.productUrl}
+            />
+          ))}
         </Flex>
       </Box>
       <Box
@@ -38,7 +79,7 @@ function VideoDetail() {
         }}
       >
         <ReactPlayer
-          url="https://youtu.be/SrF3RLllKvs"
+          url={videoUrl}
           //   playing="true"
           //   controls="true"
           width="100%"
@@ -48,31 +89,27 @@ function VideoDetail() {
           <Text fontSize={18} fontWeight={800} color="white" marginLeft={5}>
             Rekomendasi Video Lainnya
           </Text>
-          <Flex flexWrap="wrap" justifyContent="space-between">
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
-            <CardVideo />
+          <Flex flexWrap="wrap">
+            {videos.map((video, key) => (
+              <CardVideo
+                key={key}
+                onlyAtLive={video.onlyAtLive}
+                discountCoupon={video.discountCoupon}
+                isLive={true}
+                title={video.title}
+                store={video.storeName}
+                views={video.totalView}
+                image={video.thumbnailUrl}
+                onClick={() =>
+                  navigate("/detail", {
+                    state: {
+                      videoId: video.id,
+                      videoUrl: video.videoUrl,
+                    },
+                  })
+                }
+              />
+            ))}
           </Flex>
         </Box>
       </Box>

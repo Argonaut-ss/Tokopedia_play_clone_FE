@@ -74,7 +74,7 @@ function ModalLogin() {
             <ModalHeader></ModalHeader>
             <Stack spacing={4}>
               <form onSubmit={handleSubmit}>
-                <FormControl id="email">
+                <FormControl isRequired>
                   <FormLabel>Username</FormLabel>
                   <Input
                     type="text"
@@ -82,7 +82,7 @@ function ModalLogin() {
                     placeholder="username"
                   />
                 </FormControl>
-                <FormControl id="password" marginTop={5}>
+                <FormControl marginTop={5} isRequired>
                   <FormLabel>Photo</FormLabel>
                   <Input
                     type="text"

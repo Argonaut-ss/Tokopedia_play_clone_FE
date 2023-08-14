@@ -73,7 +73,7 @@ function VideoDetail() {
           {products.map((product) => (
             <CardProduct
               title={product.title}
-              priceFormat={product.price_format}
+              price={product.price}
               imageUrl={product.imageUrl}
               productUrl={product.productUrl}
             />

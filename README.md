@@ -15,8 +15,12 @@
 - react-player
 
 ## Features
-
+```
+Bonus Features
+- Photo Profile and Username
+- SignIn Features
 - Search Video
+```
 - Home Page
 - Video Detail Page
 - User can see video list with thumbnail from YouTube in home page

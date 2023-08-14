@@ -8,6 +8,9 @@ import { useNavigate } from "react-router-dom";
 function Home() {
   const navigate = useNavigate();
   const [videos, setVideos] = useState([]);
+  const getDataFromCategoryList = (data) => {
+    setVideos(data);
+  };
 
   const fetchVideos = async () => {
     try {
@@ -27,7 +30,7 @@ function Home() {
   return (
     <Box padding={3}>
       <Box marginTop={5}>
-        <CategoryList />
+        <CategoryList getData={getDataFromCategoryList} />
       </Box>
       <Box>
         {videos.map((video, key) => (

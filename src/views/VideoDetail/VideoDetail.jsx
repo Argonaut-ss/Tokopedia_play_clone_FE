@@ -5,17 +5,23 @@ import CardVideo from "../../components/CarVideo/CardVideo";
 import CommentMessage from "../../components/CommentMessage/CommentMessage";
 import { useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
+import useDataFetch from "../../hooks/useDataFetch.js";
 
 function VideoDetail() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { videoId, videoUrl } = state;
 
-  const [comments, setComments] = useState([]);
+  const videos = useDataFetch(`${process.env.REACT_APP_SERVER_URL}/videos`);
+  const products = useDataFetch(
+    `${process.env.REACT_APP_SERVER_URL}/products/${videoId}`
+  );
+  const comments = useDataFetch(
+    `${process.env.REACT_APP_SERVER_URL}/comments/${videoId}`
+  );
+
   const [username, setUsername] = useState("");
   const [commentMessage, setCommentMessage] = useState("");
-  const [products, setProducts] = useState([]);
-  const [videos, setVideos] = useState([]);
 
   const handleInputUsername = (e) => {
     setUsername(e.target.value);
@@ -48,48 +54,6 @@ function VideoDetail() {
       console.log(error);
     }
   };
-
-  const fetchVideos = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}/videos`
-      );
-      const data = await response.json();
-      setVideos(data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetchProducts = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}/products/${videoId}`
-      );
-      const data = await response.json();
-      setProducts(data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetchComments = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}/comments/${videoId}`
-      );
-      const data = await response.json();
-      setComments(data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchProducts();
-    fetchVideos();
-    fetchComments();
-  }, [videoId, videoUrl]);
 
   return (
     <Flex justifyContent="space-between">

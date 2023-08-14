@@ -40,7 +40,7 @@ git clone https://github.com/MRaehanR/tokopedia-play-clone.git
 2. Go to The Project Folder
 
 ```
-cd tokopedia-play-clone
+cd tokopedia_play_clone_fe
 ```
 
 3. Install Dependencies
